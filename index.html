@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>TGK LIVE - 9:16 Vertical Pro Overlay</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-dark: #07070c;
+    --panel-bg: #0d0e17;
+    --neon-gold: #ffcc00;
+    --neon-red: #ff2a2a;
+    --neon-cyan: #00f0ff;
+    --neon-green: #00ff66;
+    --border-dim: #2a2c42;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  html, body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background: transparent;
+    font-family: 'Press Start 2P', monospace;
+    color: #fff;
+  }
+
+  /* Main 9:16 Container */
+  .overlay-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  /* ================= TOP ZONE (HEADER + HOOK + STATS) ================= */
+  .top-zone {
+    background: var(--bg-dark);
+    padding: 12px 10px 6px 10px;
+    border-bottom: 3px solid var(--neon-gold);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.8);
+    z-index: 10;
+  }
+
+  /* 1. THE SCROLL-STOPPER HOOK BAR */
+  .hook-banner {
+    background: linear-gradient(90deg, #3a0000, #990000, #3a0000);
+    border: 2px solid var(--neon-red);
+    padding: 8px 6px;
+    text-align: center;
+    font-size: 10px;
+    color: #fff;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    box-shadow: 0 0 10px rgba(255, 42, 42, 0.5);
+    animation: pulseBorder 1.5s infinite alternate;
+  }
+  .hook-highlight {
+    color: var(--neon-gold);
+  }
+
+  @keyframes pulseBorder {
+    0% { border-color: var(--neon-red); box-shadow: 0 0 5px rgba(255,42,42,0.4); }
+    100% { border-color: var(--neon-gold); box-shadow: 0 0 14px rgba(255,204,0,0.8); }
+  }
+
+  /* 2. BRAND HEADER (Hidden Edit Trigger) */
+  .brand-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--panel-bg);
+    border: 2px solid var(--border-dim);
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+  }
+  .brand-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .arcade-icon {
+    font-size: 18px;
+  }
+  .brand-title {
+    font-size: 14px;
+    color: var(--neon-gold);
+    text-shadow: 2px 2px 0px #000;
+  }
+  .brand-sub {
+    font-size: 6.5px;
+    color: var(--neon-cyan);
+    margin-top: 4px;
+  }
+  .live-badge {
+    border: 1.5px solid var(--neon-red);
+    background: rgba(255, 0, 0, 0.15);
+    padding: 5px 7px;
+    font-size: 8px;
+    color: #ffaaaa;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .blink-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--neon-red);
+    display: inline-block;
+    animation: blink 1s steps(2, start) infinite;
+  }
+
+  @keyframes blink {
+    to { visibility: hidden; }
+  }
+
+  /* 3. CHALLENGE & LIFE/FAILS HUD */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .hud-box {
+    background: var(--panel-bg);
+    padding: 8px;
+    border: 2px solid var(--neon-red);
+  }
+  .hud-box.life-box {
+    border-color: var(--neon-gold);
+    cursor: pointer;
+  }
+  .hud-row {
+    font-size: 8px;
+    line-height: 1.4;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .hud-row:last-child {
+    margin-bottom: 0;
+  }
+  .cyan-text { color: var(--neon-cyan); }
+  .gold-text { color: var(--neon-gold); }
+  .hearts { color: var(--neon-red); font-size: 10px; letter-spacing: 2px; }
+
+  /* 4. RETRO PIXEL TICKER */
+  .ticker-wrap {
+    width: 100%;
+    overflow: hidden;
+    background: #000;
+    border-top: 1.5px solid var(--border-dim);
+    border-bottom: 1.5px solid var(--border-dim);
+    padding: 6px 0;
+  }
+  .ticker-move {
+    display: inline-block;
+    white-space: nowrap;
+    padding-left: 100%;
+    font-size: 8.5px;
+    color: var(--neon-green);
+    animation: ticker 18s linear infinite;
+  }
+  @keyframes ticker {
+    0% { transform: translate3d(0, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
+  }
+
+  /* ================= CENTER ZONE (16:9 LANDSCAPE GAMEPLAY) ================= */
+  .gameplay-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: transparent;
+    border-top: 2px solid var(--neon-cyan);
+    border-bottom: 2px solid var(--neon-cyan);
+    position: relative;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 12px rgba(0, 240, 255, 0.25);
+  }
+  /* Subtle Corner Reticles for Arcade Feel */
+  .corner-tag {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-size: 7px;
+    color: rgba(255, 255, 255, 0.35);
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3px 5px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    pointer-events: none;
+  }
+
+  /* ================= BOTTOM ZONE (SUB GOAL + CLEAN CHAT SHIELD) ================= */
+  .bottom-zone {
+    flex: 1;
+    background: var(--bg-dark);
+    padding: 8px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+  }
+
+  /* 5. INTERACTIVE SUB GOAL (Tap anywhere on box to +1) */
+  .sub-goal-box {
+    background: var(--panel-bg);
+    border: 2px solid #fff;
+    padding: 7px 8px;
+    cursor: pointer;
+  }
+  .sub-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    margin-bottom: 6px;
+  }
+  .progress-track {
+    width: 100%;
+    height: 12px;
+    background: #1a1c29;
+    border: 1.5px solid #555;
+    padding: 1px;
+    display: flex;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 84%;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--neon-red) 0px,
+      var(--neon-red) 8px,
+      #000 8px,
+      #000 10px
+    );
+    transition: width 0.3s ease;
+  }
+
+  /* 6. VIEWER ENGAGEMENT HOOK BAR */
+  .cta-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--panel-bg);
+    border: 2px solid var(--neon-gold);
+    padding: 6px 8px;
+    font-size: 7.5px;
+  }
+  .insert-coin {
+    color: var(--neon-cyan);
+    border: 1px solid var(--neon-cyan);
+    padding: 3px 5px;
+    font-size: 7px;
+    animation: blink 1.2s steps(2, start) infinite;
+  }
+
+  /* 7. CLEAN CHAT CONTRAST SHIELD (No Clashing Background Text) */
+  .chat-shield {
+    flex: 1;
+    background: linear-gradient(180deg, rgba(13,14,23,0.92) 0%, rgba(7,7,12,0.96) 100%);
+    border: 1.5px solid var(--border-dim);
+    border-top: 2px solid var(--neon-cyan);
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* Bottom margin keeps important items safe from YouTube Shorts bottom bar */
+    margin-bottom: 35px;
+  }
+  .chat-header {
+    font-size: 7.5px;
+    color: var(--neon-cyan);
+    padding-bottom: 5px;
+    border-bottom: 1px dashed rgba(0, 240, 255, 0.3);
+    display: flex;
+    justify-content: space-between;
+  }
+  /* Completely clean area for PRISM Chat Widget overlay */
+  .chat-empty-canvas {
+    flex: 1;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 0);
+    background-size: 16px 16px;
+  }
+
+  /* ================= HIDDEN EDIT MODAL (Opens on Brand Tap) ================= */
+  .edit-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 999;
+    padding: 20px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 12px;
+  }
+  .edit-modal.active {
+    display: flex;
+  }
+  .edit-modal h3 {
+    font-size: 11px;
+    color: var(--neon-gold);
+    margin-bottom: 6px;
+  }
+  .edit-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .edit-group label {
+    font-size: 7.5px;
+    color: var(--neon-cyan);
+  }
+  .edit-group input {
+    background: #141624;
+    border: 1.5px solid var(--neon-gold);
+    color: #fff;
+    padding: 8px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+  }
+  .modal-btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .modal-btn {
+    flex: 1;
+    padding: 10px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 9px;
+    border: none;
+    cursor: pointer;
+  }
+  .save-btn { background: var(--neon-green); color: #000; }
+  .reset-btn { background: var(--neon-red); color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="overlay-wrapper">
+  <!-- TOP SECTION -->
+  <div class="top-zone">
+    <!-- High-Retention Scroll Hook -->
+    <div class="hook-banner" id="display-hook">
+      ⚠️ <span class="hook-highlight">1 DEATH = STREAM ENDS!</span> CAN I BEAT IT?
+    </div>
+
+    <!-- Brand Header (Tap here to open Secret Edit Menu) -->
+    <div class="brand-header" onclick="toggleEditModal()">
+      <div class="brand-left">
+        <div class="arcade-icon">🕹️</div>
+        <div>
+          <div class="brand-title" id="display-brand">TGK LIVE</div>
+          <div class="brand-sub">90S NOSTALGIA ARCADE • HARDCORE RUN</div>
+        </div>
+      </div>
+      <div class="live-badge">
+        <span class="blink-dot"></span> 8-BIT LIVE
+      </div>
+    </div>
+
+    <!-- Active Challenge & Interactive Life/Fails Counter -->
+    <div class="stats-grid">
+      <div class="hud-box">
+        <div class="hud-row">
+          <span>🎯 GAME:</span>
+          <span class="cyan-text" id="display-game">CONTRA (1988)</span>
+        </div>
+        <div class="hud-row">
+          <span>⚡ MODE:</span>
+          <span class="gold-text" id="display-mode">NO-DEATH RUN</span>
+        </div>
+      </div>
+
+      <!-- Tap this box to add +1 FAIL, Long press/Double tap to reset -->
+      <div class="hud-box life-box" onclick="incrementFails()" ondblclick="resetFails()">
+        <div class="hud-row">
+          <span class="cyan-text">LIFE</span>
+          <span class="hearts" id="display-hearts">❤️❤️❤️</span>
+        </div>
+        <div class="hud-row">
+          <span style="color:#ff6666;">💀 FAILS</span>
+          <span class="gold-text" id="display-fails">00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- True 8-Bit Scrolling Ticker -->
+    <div class="ticker-wrap">
+      <div class="ticker-move" id="display-ticker">
+        ★ CHALLENGE: BINA EK BHI LIFE GAWAYE CLEAR KARKE DIKHAO! ★ SUB FOR REAL 90S HARDCORE GAMING ★ DROP YOUR NEXT RETRO GAME CHALLENGE IN LIVE CHAT! ★
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER SECTION: 16:9 LANDSCAPE TRANSPARENT CUTOUT -->
+  <div class="gameplay-frame">
+    <div class="corner-tag">16:9 LANDSCAPE FEED</div>
+  </div>
+
+  <!-- BOTTOM SECTION -->
+  <div class="bottom-zone">
+    <!-- Tap anywhere on Sub Goal box to +1 Sub -->
+    <div class="sub-goal-box" onclick="incrementSub()">
+      <div class="sub-header">
+        <span class="gold-text">🪙 TODAY'S SUB GOAL</span>
+        <span id="display-subs">42 / 50</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="sub-bar"></div>
+      </div>
+    </div>
+
+    <!-- Viewer Engagement Prompt -->
+    <div class="cta-bar">
+      <span>💬 DROP NEXT GAME CHALLENGE IN CHAT!</span>
+      <span class="insert-coin">INSERT COIN</span>
+    </div>
+
+    <!-- Clean Contrast Shield for PRISM Chat Widget -->
+    <div class="chat-shield">
+      <div class="chat-header">
+        <span>■ LIVE CHAT ZONE</span>
+        <span class="gold-text">[SUB FOR 90S VIBES]</span>
+      </div>
+      <div class="chat-empty-canvas"></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECRET EDIT MODAL (Hidden from viewers until you tap TGK LIVE header) -->
+<div class="edit-modal" id="editModal">
+  <h3>⚙️ EDIT OVERLAY HUD</h3>
+  <div class="edit-group">
+    <label>TOP SCROLL HOOK TEXT:</label>
+    <input type="text" id="input-hook" value="1 DEATH = STREAM ENDS! CAN I BEAT IT?">
+  </div>
+  <div class="edit-group">
+    <label>CHANNEL NAME (TGK LIVE / PAMMU NES):</label>
+    <input type="text" id="input-brand" value="TGK LIVE">
+  </div>
+  <div class="edit-group">
+    <label>ACTIVE GAME NAME:</label>
+    <input type="text" id="input-game" value="CONTRA (1988)">
+  </div>
+  <div class="edit-group">
+    <label>CHALLENGE TYPE:</label>
+    <input type="text" id="input-mode" value="NO-DEATH RUN">
+  </div>
+  <div class="edit-group">
+    <label>SUBS (CURRENT / TARGET):</label>
+    <input type="number" id="input-sub-cur" value="42">
+    <input type="number" id="input-sub-max" value="50" style="margin-top:4px;">
+  </div>
+  <div class="modal-btns">
+    <button class="modal-btn save-btn" onclick="saveSettings()">SAVE & HIDE</button>
+    <button class="modal-btn reset-btn" onclick="toggleEditModal()">CLOSE</button>
+  </div>
+</div>
+
+<script>
+  let fails = 0;
+  let currentSubs = 42;
+  let maxSubs = 50;
+
+  function incrementFails() {
+    fails++;
+    document.getElementById('display-fails').innerText = fails < 10 ? '0' + fails : fails;
+  }
+
+  function resetFails() {
+    fails = 0;
+    document.getElementById('display-fails').innerText = '00';
+  }
+
+  function incrementSub() {
+    if (currentSubs < maxSubs) currentSubs++;
+    updateSubBar();
+  }
+
+  function updateSubBar() {
+    document.getElementById('display-subs').innerText = `${currentSubs} / ${maxSubs}`;
+    let pct = Math.min(100, Math.round((currentSubs / maxSubs) * 100));
+    document.getElementById('sub-bar').style.width = pct + '%';
+  }
+
+  function toggleEditModal() {
+    document.getElementById('editModal').classList.toggle('active');
+  }
+
+  function saveSettings() {
+    document.getElementById('display-hook').innerHTML = '⚠️ <span class="hook-highlight">' + document.getElementById('input-hook').value + '</span>';
+    document.getElementById('display-brand').innerText = document.getElementById('input-brand').value;
+    document.getElementById('display-game').innerText = document.getElementById('input-game').value;
+    document.getElementById('display-mode').innerText = document.getElementById('input-mode').value;
+    currentSubs = parseInt(document.getElementById('input-sub-cur').value) || 0;
+    maxSubs = parseInt(document.getElementById('input-sub-max').value) || 50;
+    updateSubBar();
+    toggleEditModal();
+  }
+</script>
+</body>
+</html>
